@@ -1,32 +1,29 @@
 package Prova;
 
-public class Sommatore extends Thread{
-    private int inizio;
-    private int fine;
-    private double[] v;
-    private double ris = 0.0;
+import static java.lang.Math.abs;
 
-    public Sommatore(int inizio, int fine, double[] v) {
-        this.inizio = inizio;
-        this.fine = fine;
+public class Sommatore extends Thread{
+    private long start;
+    private long end;
+    private long[] v;
+    private long somma;
+    public Sommatore(long start, long end, long[] v){
+        this.start = start;
+        this.end = end;
         this.v = v;
     }
-
-    public double somma(){
-        double som = v[inizio];
-        this.inizio++;
-        for(int i=inizio; i<=fine; i++){
-            som += v[i];
-        }
-        System.out.println(som);
-        return som;
-    }
-
+    @Override
     public void run(){
-        this.ris = this.somma();
+        if(start < 0 || end >= v.length){
+            start = abs(start);
+            end = v.length - 1;
+        }
+        for(long i=start; i<=end; i++){
+            somma += v[(int)i];
+        }
     }
 
-    public double getRis(){
-        return ris;
+    public long getSomma(){
+        return somma;
     }
 }
