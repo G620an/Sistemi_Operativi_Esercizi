@@ -1,5 +1,7 @@
 package Casa_di_Cura;
 
+import java.util.Random;
+
 public interface Medico extends Runnable{
     public static Random rand = new Random();
     public int getID();
