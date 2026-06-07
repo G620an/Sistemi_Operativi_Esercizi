@@ -6,6 +6,7 @@ import java.util.Random;
 public abstract class CasaDiCura implements Runnable{
     public final static int Posti_Sala_Attesa = 3;
     public final static Random r = new Random();
+    private Paziente[] pazienti = new Paziente[1000];
     public abstract int getID();
     public abstract void pazienteEntra() throws InterruptedException;
         //Il pazziente deve poter entrare in sala di attesa

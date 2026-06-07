@@ -19,6 +19,9 @@ public class CasaDiCuraLC extends CasaDiCura{
     private Condition sdaC;
     private Condition mutexC;
     private Condition rMC;
+    private int psda;
+    private boolean opLib;
+    private boolean chiama;
 
     public CasaDiCuraLC(int ID){
         this.ID = ID;
@@ -30,6 +33,9 @@ public class CasaDiCuraLC extends CasaDiCura{
         this.sdaC = this.sda.newCondition();
         this.mutexC = this.mutexOp.newCondition();
         this.rMC = this.rM.newCondition();
+        this.psda = 0;
+        this.opLib = true;
+        this.chiama = false;
     }
 
     public int getID() {
@@ -45,8 +51,24 @@ public class CasaDiCuraLC extends CasaDiCura{
     }
 
     @Override
-    public void pazienteEntra(){
-        this.sdaC.signal();
+    public void pazienteEntra() throws InterruptedException{
+        try{
+            this.sda.lock(); //La lock è come l'acquire
+            while(this.psda >= 3){
+                this.sdaC.await(); //Aspetta sulla condizione
+            }
+            this.psda ++;
+            while(!this.opLib){
+                this.mutexC.await();
+            }
+            this.mutexOp.lock();
+            this.opLib = false;
+            this.psda --;
+            this.rMC.signal();
+            this.chiama = true;
+        }finally{
+            this.sda.unlock();
+        }
     }
 
     @Override
@@ -56,11 +78,16 @@ public class CasaDiCuraLC extends CasaDiCura{
 
     @Override
     public void chiamaEIniziaOperazione()throws InterruptedException{
-
+        this.rM.lock();
+        while(!this.chiama){
+            this.rMC.await();
+        }
+        this.chiama = false;
     }
 
     @Override
     public void fineOperazione()throws InterruptedException{
-
+        this.rM.unlock();
+        this.mutexC.signal();
     }
 }

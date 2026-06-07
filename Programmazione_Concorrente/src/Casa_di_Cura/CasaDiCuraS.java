@@ -15,6 +15,7 @@ public class CasaDiCuraS extends CasaDiCura{
         this.sda = new Semaphore(3); //sda è il semaforo della Sala Di Attesa
         this.mutexOp = new Semaphore(1, true); //mutex per l'accesso alla sala operatoria
         this.rM = new Semaphore(0); //semaforo di risveglio medico
+
     }
 
     public int getID(){
