@@ -22,9 +22,10 @@ public class MedicoImpl extends MedicoAbstract{
         try {
             while (true) {
                 this.cdc.chiamaEIniziaOperazione();
+                System.out.println("Sono il medico, sto iniziando l'operazione!");
                 Thread.sleep(this.rand.nextInt(20000, 40000));
+                System.out.println("Sono il medico, ho finito l'operazione!");
                 this.cdc.fineOperazione();
-                this.cdc.pazienteEsci();
             }
         }catch(InterruptedException e){
             e.printStackTrace();

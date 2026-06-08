@@ -1,6 +1,6 @@
 package Casa_di_Cura;
 
-import java.util.Random;
+import java.util.LinkedList;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -11,83 +11,101 @@ public class CasaDiCuraLC extends CasaDiCura{
     //Con var booleane e linkedlist
     private int ID;
     private int count;
-    private static final Random r = new Random();
-    private Lock sda;
-    private int pis; //Posti in sala
-    private Lock mutexOp;
-    private Lock rM;
+    private LinkedList<Paziente> sala;
+    private final static int POSTI = 3;
+    private int contaPosti;
+    private Lock lock;
     private Condition sdaC;
-    private Condition mutexC;
-    private Condition rMC;
-    private int psda;
-    private boolean opLib;
-    private boolean chiama;
+    private Condition operazioneC;
+    private boolean libero;
+    private Condition operandoC;
+    private Condition risvegliaMC;
+
+
 
     public CasaDiCuraLC(int ID){
         this.ID = ID;
-        this.count = 1;
-        this.rM = new ReentrantLock();
-        this.sda = new ReentrantLock();
-        this.mutexOp = new ReentrantLock();
-        this.pis = 3;
-        this.sdaC = this.sda.newCondition();
-        this.mutexC = this.mutexOp.newCondition();
-        this.rMC = this.rM.newCondition();
-        this.psda = 0;
-        this.opLib = true;
-        this.chiama = false;
+        this.count = 0;
+        this.contaPosti = 0;
+        this.sala = new LinkedList<>();
+        this.lock = new ReentrantLock();
+        this.sdaC = this.lock.newCondition();
+        this.operazioneC = this.lock.newCondition();
+        this.libero = true;
+        this.operandoC = this.lock.newCondition();
+        this.risvegliaMC = this.lock.newCondition();
+
     }
 
-    public int getID() {
-        return ID;
-    }
-
-    public int getCount(){
-        return this.count;
+    public int getCount() {
+        return count;
     }
 
     public void addCount(){
         this.count++;
     }
 
+    public int getID() {
+        return ID;
+    }
+
     @Override
-    public void pazienteEntra() throws InterruptedException{
+    public void pazienteEntra()throws InterruptedException{
         try{
-            this.sda.lock(); //La lock è come l'acquire
-            while(this.psda >= 3){
-                this.sdaC.await(); //Aspetta sulla condizione
+            this.lock.lock();
+            while(this.contaPosti > CasaDiCuraLC.POSTI) {
+                this.sdaC.await();
             }
-            this.psda ++;
-            while(!this.opLib){
-                this.mutexC.await();
+            this.contaPosti++;
+            while(!this.libero){
+                this.operazioneC.await();
             }
-            this.mutexOp.lock();
-            this.opLib = false;
-            this.psda --;
-            this.rMC.signal();
-            this.chiama = true;
+            this.libero = false;
+            this.risvegliaMC.signal();
         }finally{
-            this.sda.unlock();
+                this.lock.unlock();
         }
     }
 
     @Override
-    public void pazienteEsci(){
-
+    public void pazienteEsci()throws InterruptedException{
+        try{
+            this.lock.lock();
+            this.operandoC.await();
+        }finally{
+            this.lock.unlock();
+        }
     }
 
     @Override
     public void chiamaEIniziaOperazione()throws InterruptedException{
-        this.rM.lock();
-        while(!this.chiama){
-            this.rMC.await();
+        try{
+            this.lock.lock();
+            this.risvegliaMC.await();
+            this.contaPosti--;
+        }finally{
+            this.lock.unlock();
         }
-        this.chiama = false;
+
     }
 
     @Override
     public void fineOperazione()throws InterruptedException{
-        this.rM.unlock();
-        this.mutexC.signal();
+        try{
+            this.lock.lock();
+            this.operandoC.signal();
+        }finally{
+            this.lock.unlock();
+        }
+        System.out.println("Sono il medico, sto preparando la sala operatoria...");
+        Thread.sleep(20000);
+        System.out.println("Sono il medico, sala operatoria pronta!");
+        try{
+            this.lock.lock();
+            this.libero = true;
+            this.operazioneC.signal();
+        }finally{
+            this.lock.unlock();
+        }
     }
 }

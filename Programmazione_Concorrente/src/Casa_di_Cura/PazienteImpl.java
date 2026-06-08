@@ -20,6 +20,9 @@ public class PazienteImpl extends PazienteAbstract{
     public void run(){
         try {
             cdc.pazienteEntra();
+            System.out.println("Sono il paziente("+this.getID()+"), sono entrato nella sala operatoria!");
+            cdc.pazienteEsci();
+            System.out.println("Sono il paziente("+this.getID()+"), sono uscito dalla sala operatoria!");
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
