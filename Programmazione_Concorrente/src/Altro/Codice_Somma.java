@@ -2,7 +2,7 @@ import Prova.Popola;
 import Prova.Sommatore;
 
 
-public class Codice_Somma{
+public static class Codice_Somma{
     public static long somma()throws Exception{
         int N = 100;
         long n = 100000000;
