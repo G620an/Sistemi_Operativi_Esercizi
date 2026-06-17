@@ -1,7 +1,9 @@
-import Casa_di_Cura.CasaDiCuraLC;
-import Casa_di_Cura.Esegui;
+import Bar.Bar;
+import Bar.BarImpl;
+import Bar.Esegui;
 
 public static void main(String[] args) throws InterruptedException {
-    Esegui esegui = new Esegui(new CasaDiCuraLC(1));
-    esegui.start();
+    Bar b = new BarImpl(1);
+    Esegui es = new Esegui(b);
+    es.start();
 }
