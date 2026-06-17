@@ -1,9 +1,6 @@
-import Bar.Bar;
-import Bar.BarImpl;
-import Bar.Esegui;
+import Funivia.FuniviaImpl;
 
 public static void main(String[] args) throws InterruptedException {
-    Bar b = new BarImpl(1);
-    Esegui es = new Esegui(b);
-    es.start();
+    FuniviaImpl f = new FuniviaImpl();
+    (new Thread(f)).start();
 }
