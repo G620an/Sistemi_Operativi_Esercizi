@@ -1,6 +1,7 @@
-import Funivia.FuniviaImpl;
+import Gelateria.GelateriaImpl;
+import Gelateria.Gelateria;
 
 public static void main(String[] args) throws InterruptedException {
-    FuniviaImpl f = new FuniviaImpl();
-    (new Thread(f)).start();
+    Gelateria g = new GelateriaImpl(1,10);
+    (new Thread(g)).start();
 }
