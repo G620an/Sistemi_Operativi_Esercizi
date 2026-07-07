@@ -1,0 +1,105 @@
+Bisogna:
+    -Descrivere il funzionamento della applicazione java
+    -l'output che produce
+    -se l'applicazione termina
+
+
+Analisi:
+    L'aplicazione instanzia nel main una matrice n x n di MyThread; passa ad ogni therad riga, colonna e n, e li lancia appena istanziati
+    MyThread riceve i tre parametri e implementa il run:
+        se riga == colonna allora rilascia un permesso del semaforo
+        altrimenti:
+            cerca di prendere il semaforo e di stampare Thread(riga, colonna) + lo stato del thread corrente, es. RUNNABLE
+
+    Il programma corrente produrrà:
+        1: salta
+        2: Thread(0, 1) RUNNABLE
+        5: salta
+        6: Thread(1, 2) RUNNABLE
+        8: Thread(2, 1) RUNNABLE
+        9: salta
+    Non deterministico
+
+
+    Vediamo se si blocca:
+        0° passo s = 0
+        1° passo s = 1
+        2° passo s = 0
+        3° passo s = -1
+        4° passo s = -2
+        5° passo s = -1
+        6° passo s = -2
+        7° passo s = -3
+        8° passo s = -4
+        9° passo s = -3
+    Alla fine rimarrano molti thread bloccati e quindi l'applicazione non termina
+
+Altro esercizio:
+
+    Funzionamento:
+        Main:
+            Viene dichiarato un elemento della classe BW con true passato come parametro.
+            BW estende thread quindi viene lanciato
+
+            Si salva lo stato del thread corrente (main)
+            Si salva lo stato di t1
+            viene stampato lo stato 0 e lo stato 1
+            si mofifica il parametro di t1 con il risultato dell'espressione s0.equals(s1) che restituisce true se
+            lo stato s0 == s1 e false altrimenti
+
+
+            All'interno di BW, abbiamo il costruttore che prende come parametro bw assegnato a busy waiting
+            Nel run abbiamo un do while:
+                Manda a dormire il thread e poi controlla se busy_waiting è true se è vero ripete altrimenti esce e stampa
+                sisp-corsoB
+
+           Output:
+                State 0: RUNNABLE ; State 1: NOT RUNNABLE
+                sisop-corsoB
+
+           l'output è deterministico,  perchè inizialemnte il thread viene messo in sleep dal parametro true che riceve
+           e dopo aver stampato gli stati, il parametro è cambiato sempre in false e quindi esce dal ciclo e
+           stampa sisop-corsoB
+
+           L'applicazione riesce a terminare
+
+
+
+
+
+Altro esercizio:
+    si istanzia una variabile di classe non modificabile intera N = 10
+    viene istanziato un array di semafori con dimensione N
+
+    Il main si apre con un for da 0 -> N che inizializza tutti i semafori a 0 permessi
+    un secondo for da 0->n inizializza Task t passandogli i e lo lancia
+
+    Task:
+        riceve un id il famoso i passato
+
+        run:
+            se l'id è minore di N-1 allora cerca di prendere un permesso dal semaforo di ID +1
+            se riesce stampa lo stato del thread che ha fatto l'acquire sul semaforo
+
+            usciti dall'if si stampa l'id dell'esecutore del task e lo si mette a dormire per 1 secondo
+            infine rilascia il permesso al semaforo corrispondende al proprio id e termina
+
+    OUTPUT:
+        Esecuzione task: 9
+        state: RUNNABLE
+        Esecuzione task: 8
+        state: RUNNABLE
+        Esecuzione task: 7
+
+        e così via fino a
+
+        state: RUNNABLE
+        Esecuzione task: 0
+
+        fine
+
+        l'output è deterministico, i thread si sincronizzano attraverso i semafori, la loro esecuzione senza deadlock è sempre:
+        ultimo thread che non ha nessuno davanti libera il proprio semaforo e il thread dietro di lui si sblocca e così via
+        a cascata tutti i thread vengono eseguiti
+
+    Quindi si, l'applicazione termina.

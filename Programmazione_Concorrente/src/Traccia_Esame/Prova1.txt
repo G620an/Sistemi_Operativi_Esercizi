@@ -1,0 +1,89 @@
+Scheduling della CPU:
+    Tempo di attesa:
+        tempo che il processo ha passato nella ready queue
+    Tempo di completamento:
+        Differenza fra tempo in cui il processo termina e il tempo in cui entra per la prima volta in ready queue
+    Tempo di risposta:
+        Tempo che intercorre da quando il processo è stato creato a quando per la prima volta gli viene assegnata la CPU
+
+
+    Per calcolare il tempo di attesa medio calcolo il tempo di attesa di ogni processo, considerando il tempo che il processo passa
+    in uno stato di pronto senza ottenere la CPU.
+    Per il FIFO è semplice e anche per il SJF è semplice se non abbiamo preemption.
+
+    Per calcolae il tempo di risposta media, per il FIFO è equivalente al tempo medio di attesa per il SJF senza peemption anche.
+
+    Per calcolare il tempo di completamento, easy devo solo fare la media aritmetica tenendo conto del tempo di esecuzione e del
+    tempo di Ready Queue che ogni processo sopporta.
+
+    Questa era la parte facile ora iniziamo con il SJF con preemption, quì si complica, ora dobbiamo considerare che se arriva un
+    processo con un CPU burst inferiore al processo attualmente in esecuzione, devo lasciare spazio a esso.
+
+    Infine usiamo algoritmo con priorità preemptive e non preemptive; facile perchè le priorità le abbiamo già nella tabella.
+
+    Alla fine nulla di troppo complicato però dobbiamo disegnare molti diagrammi di Gantt; l'idea è disegnare un'asse del tempo
+    dove metti i processi in ordine di arrivo per avere un idea e poi con le varie politiche ti gestisci il diagramma di Gantt e da li
+    calcoli tempo di risposta per ogni processo.
+
+Sostituzione delle pagine:
+    Si deve considerare una successione di riferimenti a pagine in memoria centrale.
+
+    Si deve calcolare il numero di page fault generati dai seguenti 3 algoritmi di sostituzione: FIFO LRU, Ottimale.
+
+    Disegno 3 slot cioè il numero di pagine in memoria per processo; inizialmente carico le prime tre pagine in tutti gli algoritmi
+    perchè devo per forza generare 3 page fault; in seguito con il FIFO sostiuisco la prima inserita mentre con LRU sostituisco la pagina
+    che nella sequenza appena letta fino a quel momento, compare meno volte, nel caso di parità si usa il FIFO.
+    L'ottimale invece non guarda al passato ma al futuro, tolgo la pagina che dovro usare meno nel futuro.
+
+Scheduling del disco:
+    Si suppone un disco con 1000 cilindri numerati da 0 a 999, il cilindro sta servendo il cilindro 100 e prima ha servito 50,
+    si calcoli la distanza totale che la testina fa per ogni algoritmo:
+        FCFS:
+            70+630+200+100+500+840+390+360+60 = 3000 e passa
+        SSTS:
+            10+30+30+120+250+100+200+200=940
+        SCAN:
+            50+250+50+50+200+200+30+30+30 devo contare anche il torna indietro
+        LOOK:
+            50+250+50+50+200+200+810+30+30 = 1670
+        C-SCAN:
+            facile devi solo arrivare alla fine e non considerare il ritorno all'inizio
+        C-LOOK:
+            stesso dello scan mi fermo prima della fine
+
+Deadlock:
+    Il deadlock si può verificare se e solo se si verificano contemporaneamente:
+        -Mutua esclusione
+        -Attesa ciclica
+        -Possesso e attesa
+        -Impossibilità di Preemption
+
+    Viene assegnato un grafo di assegnazione delle risorse e bisogna dire se c'è deadlock o non c'è deadlock.
+    N.B se per ogni risorsa abbiamo una e una sola istanza e all'interno del grafo troviamo un ciclo, allora abbiamo
+    sicuramente un deadlock; nella stessa situazione ma con più istanze, abbiamo solo la possibilità di deadlock non ne
+    siamo sicuri.
+    Se non ci sono cicli non c'è deadlock.
+
+Allocazione dinamica della memoria:
+    In ogni momento è presente un insime di buhi, cioè blocchi di memoria disponibile di diverse dimensioni sparsi nella memoria.
+    Il nostro obiettivo è allocare a ogni processo il buco corrispondende analizzando le varie metodologie di scelta:
+        First-fit: scelgo il primo buco in cui entra tutto il processo
+        Best-Fit: scelgo il buco che meglio si addice alla mia dimensione
+        Worst-Fit: contrario di best fit anche se non ha senso.
+
+    L'esercizio ci chiede di calcolare la frammentazione interna, considerando che i buchi ricoprono l'intera memoria e quindi
+    non abbiamo frammentazione esterna, oppure si? Invece si perchè abbiamo gli indirizzi di partenza e da essi possiamo vedere lo
+    spazio che c'è tra i vari buchi.
+
+
+Fork dei processi:
+    Viene dato del codice con fork() come viste per linux, in particolare questa chiede:
+    Chi fra padre e figlio esegue istruzione 1. Nell'ipotsi che all'atto delle esecuzione della fork lo scheduler scelga di eseguire
+    prima il figlio e dopp il padre qual è l'output del programma:
+
+    Istruzione 1 è eseguita prima dal figlio ma comunque eseguita da entrambi:
+    L'output sarà
+    x=10 (figlio)
+    x=1 (padre)
+
+

@@ -1,7 +1,7 @@
-import Gelateria.GelateriaImpl;
-import Gelateria.Gelateria;
+import Lettori_Scrittori_Monitor_Nativi.Biblioteca;
+import Lettori_Scrittori_Monitor_Nativi.BibliotecaImplFIFO;
 
 public static void main(String[] args) throws InterruptedException {
-    Gelateria g = new GelateriaImpl(1,10);
-    (new Thread(g)).start();
+    Biblioteca b = new BibliotecaImplFIFO(30);
+    (new Thread(b)).start();
 }

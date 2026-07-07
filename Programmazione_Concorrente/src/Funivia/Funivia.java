@@ -12,4 +12,5 @@ public interface Funivia extends Runnable {
     void pilotaEnd();
     void turistaSali(int t, int ID); //t definiscce il tipo di turista 0: turista a piedi ; 1: turista in bici
     void turistaScendi(int t, int ID);
+
 }

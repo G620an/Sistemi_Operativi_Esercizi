@@ -128,6 +128,8 @@ public class FuniviaImpl implements Funivia {
             int tipo = Funivia.r.nextInt(2);
             (new Thread(new TuristaImpl(id, tipo, this))).start();
             this.cT ++;
+
         }
     }
+
 }
