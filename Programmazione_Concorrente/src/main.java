@@ -1,7 +1,7 @@
-import Lettori_Scrittori_Monitor_Nativi.Biblioteca;
-import Lettori_Scrittori_Monitor_Nativi.BibliotecaImplFIFO;
+import Esame_SISOP.Esame;
+import Esame_SISOP.EsameImpl;
 
 public static void main(String[] args) throws InterruptedException {
-    Biblioteca b = new BibliotecaImplFIFO(30);
-    (new Thread(b)).start();
+    Esame e = new EsameImpl(135);
+    (new Thread(e)).start();
 }
